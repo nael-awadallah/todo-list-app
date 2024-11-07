@@ -58,10 +58,11 @@ export default function TodoApp() {
   const completedTodos = todos.filter((todo) => todo.completed);
 
   return (
-    <div className="min-h-screen  p-4 flex flex-col items-center">
+    <div className="min-h-screen p-4 flex flex-col items-center">
       <Card className="w-full max-w-xl bg-[#1C1A27] border-none shadow-2xl">
         <CardContent className="p-6">
-          <div className="flex justify-between items-center mb-6">
+          <WeatherWidget />
+          <div className="flex justify-between items-center mt-6 mb-6">
             <h1 className="text-2xl font-bold text-white">TO-DO NOW</h1>
             <Button
               onClick={clearLocalStorage}
@@ -78,7 +79,8 @@ export default function TodoApp() {
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
               placeholder="Add a new task"
-              className="flex-1 bg-[#282533] border-none text-white placeholder:text-gray-500"
+              className="flex-1 bg-[#282533] border-[#9e78cf54] text-white placeholder:text-gray-500 focus:border-gray-600"
+              required
             />
             <Button
               type="submit"
@@ -95,7 +97,7 @@ export default function TodoApp() {
                 Tasks to do - {activeTodos.length}
               </div>
               <div className="space-y-2">
-                {activeTodos.map((todo) => (
+                {activeTodos.map((todo, index) => (
                   <div
                     key={todo.id}
                     className="flex items-center justify-between p-3 bg-[#282533] rounded-lg"
@@ -105,9 +107,14 @@ export default function TodoApp() {
                         onClick={() => toggleTodo(todo.id)}
                         className="h-5 w-5 rounded border border-[#6C5DD3] flex items-center justify-center hover:bg-[#6C5DD3]/20"
                       >
-                        {/* <Check className="h-4 w-4 text-[#6C5DD3]" /> */}
+                        <Check className="h-4 flex-none w-5 text-[#6d5dd32c]" />
                       </button>
-                      <span className="text-[#6C5DD3]">{todo.text}</span>
+                      <span className="text-[#6C5DD3] flex-auto font-semibold">
+                        <span className="text-[#6C5DD3] text-sm	">
+                          {++index}.{' '}
+                        </span>
+                        {todo.text}
+                      </span>
                     </div>
                     <button
                       onClick={() => deleteTodo(todo.id)}
@@ -170,7 +177,6 @@ export default function TodoApp() {
               </div>
             </div>
           </div> */}
-          <WeatherWidget />
         </CardContent>
       </Card>
     </div>
