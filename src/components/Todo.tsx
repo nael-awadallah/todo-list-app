@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import { useState } from 'react';
-import { Check, Plus, Trash2, Cloud } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Check, Plus, Trash2, Cloud, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -17,6 +17,17 @@ interface Todo {
 export default function TodoApp() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTask, setNewTask] = useState('');
+
+  useEffect(() => {
+    const storedTodos = localStorage.getItem('todos');
+    if (storedTodos) {
+      setTodos(JSON.parse(storedTodos));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
 
   const addTodo = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +49,11 @@ export default function TodoApp() {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
+  const clearLocalStorage = () => {
+    localStorage.removeItem('todos');
+    setTodos([]);
+  };
+
   const activeTodos = todos.filter((todo) => !todo.completed);
   const completedTodos = todos.filter((todo) => todo.completed);
 
@@ -45,9 +61,17 @@ export default function TodoApp() {
     <div className="min-h-screen  p-4 flex flex-col items-center">
       <Card className="w-full max-w-xl bg-[#1C1A27] border-none shadow-2xl">
         <CardContent className="p-6">
-          <h1 className="text-2xl font-bold text-center text-white mb-6">
-            TO-DO NOW
-          </h1>
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold text-white">TO-DO NOW</h1>
+            <Button
+              onClick={clearLocalStorage}
+              variant="outline"
+              size="icon"
+              className="bg-transparent border-[#6C5DD3] text-[#6C5DD3] hover:bg-[#6C5DD3] hover:text-white"
+            >
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+          </div>
 
           <form onSubmit={addTodo} className="flex gap-2 mb-6">
             <Input
@@ -81,13 +105,13 @@ export default function TodoApp() {
                         onClick={() => toggleTodo(todo.id)}
                         className="h-5 w-5 rounded border border-[#6C5DD3] flex items-center justify-center hover:bg-[#6C5DD3]/20"
                       >
-                        <Check className="h-4 w-4 text-[#6C5DD3]" />
+                        {/* <Check className="h-4 w-4 text-[#6C5DD3]" /> */}
                       </button>
                       <span className="text-[#6C5DD3]">{todo.text}</span>
                     </div>
                     <button
                       onClick={() => deleteTodo(todo.id)}
-                      className="text-gray-500 hover:text-gray-400"
+                      className="text-red-500 hover:text-red-400"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -98,7 +122,7 @@ export default function TodoApp() {
           )}
 
           {completedTodos.length > 0 && (
-            <div>
+            <div className="mb-6">
               <div className="text-sm text-gray-400 mb-3">
                 Done - {completedTodos.length}
               </div>
@@ -111,17 +135,17 @@ export default function TodoApp() {
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => toggleTodo(todo.id)}
-                        className="h-5 w-5 rounded bg-[#6C5DD3] flex items-center justify-center"
+                        className="h-5 w-5 rounded bg-green-700 flex items-center justify-center"
                       >
                         <Check className="h-4 w-4 text-white" />
                       </button>
-                      <span className="text-gray-500 line-through">
+                      <span className="text-green-500 line-through">
                         {todo.text}
                       </span>
                     </div>
                     <button
                       onClick={() => deleteTodo(todo.id)}
-                      className="text-gray-500 hover:text-gray-400"
+                      className="text-red-500 hover:text-red-400"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
