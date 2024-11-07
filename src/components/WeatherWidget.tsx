@@ -16,7 +16,7 @@ interface WeatherData {
   name: string;
 }
 
-const API_KEY = '93e019b6cee1b3638829bcd55b8f2207'; // Replace with your actual API key
+const API_KEY = 'Replace with your actual API key'; 
 const CITY = 'Amman'; // You can make this dynamic if needed
 
 export default function WeatherWidget() {
